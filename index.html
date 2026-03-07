@@ -1217,7 +1217,52 @@
       createSection(summary, "Actions To Avoid", avoid, true);
       createSection(summary, "Documents To Preserve", docs);
       createSection(summary, "Timing Considerations", timing);
+// Incident Summary
+const summarySection = document.createElement("div");
+summarySection.style.marginTop = "14px";
 
+const summaryTitle = document.createElement("h3");
+summaryTitle.textContent = "Incident Summary";
+summarySection.appendChild(summaryTitle);
+
+const summaryText = document.createElement("p");
+
+let summaryParts = [];
+
+if (answers.safety_risk === "yes") {
+  summaryParts.push("An immediate safety concern was identified.");
+}
+
+if (answers.incident === "yes") {
+  summaryParts.push("An incident or near-miss occurred.");
+}
+
+if (answers.fatigue === "yes") {
+  summaryParts.push("Possible fatigue or impairment was noted.");
+}
+
+const flags = getMultiAnswer("context_flags");
+
+if (flags.includes("damage")) {
+  summaryParts.push("Property or equipment damage may be involved.");
+}
+
+if (flags.includes("injury")) {
+  summaryParts.push("A potential injury or medical concern was reported.");
+}
+
+if (flags.includes("hazmat")) {
+  summaryParts.push("Possible hazardous material or environmental concern was identified.");
+}
+
+if (summaryParts.length === 0) {
+  summaryText.textContent = "No significant incident indicators were reported based on the selections provided.";
+} else {
+  summaryText.textContent = summaryParts.join(" ");
+}
+
+summarySection.appendChild(summaryText);
+summary.appendChild(summarySection);
       const flags = getMultiAnswer("context_flags");
       const other = (answers["context_flags_otherText"] || "").trim();
 
